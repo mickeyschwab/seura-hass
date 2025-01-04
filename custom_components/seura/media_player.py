@@ -55,7 +55,7 @@ class SeuraTV(MediaPlayerEntity):
         self._muted = False
         self._source = None
         self._source_list = []
-        self._client = SeuraClient(ip_address=host)
+        self._client = SeuraClient(host=host)
 
     @property
     def name(self) -> str:

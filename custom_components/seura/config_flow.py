@@ -29,7 +29,7 @@ class SeuraConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 _LOGGER.info(f"Creating Seura client with host: {user_input[CONF_HOST]}")
-                client = SeuraClient(ip_address=user_input[CONF_HOST])
+                client = SeuraClient(host=user_input[CONF_HOST])
                 # Test connection
                 response = client.query_power()
                 _LOGGER.info(f"Response from new Seura client: {response}")

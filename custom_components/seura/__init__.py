@@ -43,7 +43,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     host = entry.data[CONF_HOST]
 
     try:
-        client = SeuraClient(ip_address=host)
+        client = SeuraClient(host=host)
         # Test the connection
         await hass.async_add_executor_job(client.query_power)
     except SeuraError as err:

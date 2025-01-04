@@ -38,7 +38,7 @@ class SeuraRemote(RemoteEntity):
         self._host = host
         self._attr_name = f"{name} Remote"
         self._attr_unique_id = f"{name.lower().replace(' ', '_')}_remote"
-        self._client = SeuraClient(ip_address=host)
+        self._client = SeuraClient(host=host)
 
     def turn_on(self, **kwargs: Any) -> None:
         """Turn the remote on."""
