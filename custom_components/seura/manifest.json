@@ -6,6 +6,6 @@
     "documentation": "https://github.com/mickeyschwab/seura-hass",
     "iot_class": "local_polling",
     "issue_tracker": "https://github.com/mickeyschwab/seura-hass/issues",
-    "requirements": ["seura>=0.2.2"],
-    "version": "0.2.9"
+    "requirements": ["seura>=0.2.3"],
+    "version": "0.2.10"
   } 
