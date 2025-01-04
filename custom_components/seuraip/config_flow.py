@@ -30,7 +30,7 @@ class SeuraConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             try:
                 client = SeuraClient(user_input[CONF_HOST])
                 # Test connection
-                client.get_power()
+                client.query_power()
 
                 # Create unique ID from host
                 await self.async_set_unique_id(user_input[CONF_HOST])

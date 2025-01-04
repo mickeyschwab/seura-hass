@@ -14,7 +14,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
-from seura import SeuraClient
+from seura import SeuraClient, config
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -96,16 +96,16 @@ class SeuraTV(MediaPlayerEntity):
     def update(self) -> None:
         """Fetch state from the device."""
         try:
-            power_state = self._client.get_power()
+            power_state = self._client.query_power()
             self._state = (
                 MediaPlayerState.ON if power_state == "ON" else MediaPlayerState.OFF
             )
 
             if self._state == MediaPlayerState.ON:
-                self._volume = int(self._client.get_volume())
-                self._muted = self._client.get_mute() == "ON"
-                self._source = self._client.get_source()
-                self._source_list = self._client.get_source_list()
+                self._volume = int(self._client.query_volume())
+                self._muted = self._volume == 0
+                self._source = self._client.query_input()
+                self._source_list = config.INPUT_LIST.keys()
         except Exception as err:
             _LOGGER.error("Error updating Seura TV state: %s", err)
             self._state = MediaPlayerState.OFF
@@ -127,17 +127,13 @@ class SeuraTV(MediaPlayerEntity):
         self._client.volume_down()
 
     def set_volume_level(self, volume: float) -> None:
-        """Set volume level, range 0..1."""
-        volume_int = int(volume * 100)
-        self._client.set_volume(volume_int)
+        """Set volume level, range 0..100."""
+        self._client.set_volume(int(volume))
 
     def mute_volume(self, mute: bool) -> None:
         """Mute (true) or unmute (false) media player."""
-        if mute:
-            self._client.mute_on()
-        else:
-            self._client.mute_off()
+        self._client.send_command("MUTE")
 
     def select_source(self, source: str) -> None:
         """Select input source."""
-        self._client.set_source(source) 
+        self._client.set_input(source) 
