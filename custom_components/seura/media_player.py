@@ -99,7 +99,7 @@ class SeuraTV(MediaPlayerEntity):
                 self._volume = int(self._client.query_volume())
                 self._muted = self._volume == 0
                 self._source = self._client.query_input()
-                self._source_list = list(self._client._client.INPUT_MAP.keys())
+                self._source_list = self._client.get_inputs()
         except Exception as err:
             _LOGGER.error("Error updating Seura TV state: %s", err)
             self._state = MediaPlayerState.OFF
