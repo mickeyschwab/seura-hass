@@ -18,6 +18,15 @@ from seura import SeuraClient, config
 
 _LOGGER = logging.getLogger(__name__)
 
+SUPPORT_SEURA = (
+    MediaPlayerEntityFeature.TURN_ON
+    | MediaPlayerEntityFeature.TURN_OFF
+    | MediaPlayerEntityFeature.VOLUME_STEP
+    | MediaPlayerEntityFeature.VOLUME_MUTE
+    | MediaPlayerEntityFeature.VOLUME_SET
+    | MediaPlayerEntityFeature.SELECT_SOURCE
+)
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
