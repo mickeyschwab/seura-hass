@@ -28,12 +28,14 @@ class SeuraConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                client = SeuraClient(user_input[CONF_HOST])
+                _LOGGER.info(f"Creating Seura client with host: {user_input[CONF_HOST]}")
+                client = SeuraClient(ip_address=user_input[CONF_HOST])
                 # Test connection
-                client.query_power()
+                response = client.query_power()
+                _LOGGER.info(f"Response from new Seura client: {response}")
 
                 # Create unique ID from host
-                await self.async_set_unique_id(user_input[CONF_HOST])
+                await self.async_set_unique_id(user_input[CONF_NAME])
                 self._abort_if_unique_id_configured()
 
                 return self.async_create_entry(
