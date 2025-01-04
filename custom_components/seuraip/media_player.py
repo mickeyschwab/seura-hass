@@ -14,7 +14,7 @@ from homeassistant.const import CONF_HOST, CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from . import DOMAIN
+from seura import SeuraClient, config
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,11 +24,10 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Seura TV from a config entry."""
-    client = hass.data[DOMAIN][entry.entry_id]
     name = entry.data[CONF_NAME]
     host = entry.data[CONF_HOST]
 
-    async_add_entities([SeuraTV(client, name, host)], update_before_add=True)
+    async_add_entities([SeuraTV(name, host)], update_before_add=True)
 
 class SeuraTV(MediaPlayerEntity):
     """Representation of a Seura TV."""
