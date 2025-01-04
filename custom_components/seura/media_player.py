@@ -97,7 +97,7 @@ class SeuraTV(MediaPlayerEntity):
             )
 
             if self._state == MediaPlayerState.ON:
-                self._volume = int(self._client.query_volume())
+                self._volume = int(self._client.query_volume()) / 100
                 self._muted = self._volume == 0
                 self._source = self._client.query_input()
                 self._source_list = list(INPUT_MAP.keys())
@@ -122,8 +122,8 @@ class SeuraTV(MediaPlayerEntity):
         self._client.volume_down()
 
     def set_volume_level(self, volume: float) -> None:
-        """Set volume level, range 0..100."""
-        self._client.set_volume(int(volume))
+        """Set volume level, range 0..1."""
+        self._client.set_volume(volume * 100)
 
     def mute_volume(self, mute: bool) -> None:
         """Mute (true) or unmute (false) media player."""
