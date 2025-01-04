@@ -1,4 +1,5 @@
 """The Seura TV integration."""
+
 from __future__ import annotations
 
 import logging
@@ -22,7 +23,7 @@ _LOGGER = logging.getLogger(__name__)
 DOMAIN = "seura"
 DEFAULT_NAME = "Seura TV"
 
-PLATFORMS = [Platform.MEDIA_PLAYER]
+PLATFORMS = [Platform.MEDIA_PLAYER, Platform.REMOTE]
 
 CONFIG_SCHEMA = vol.Schema(
     {

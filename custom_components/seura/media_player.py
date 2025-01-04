@@ -47,6 +47,7 @@ class SeuraTV(MediaPlayerEntity):
 
     def __init__(self, host: str, name: str) -> None:
         """Initialize the Seura TV device."""
+        self._attr_unique_id = name.lower().replace(' ', '_')
         self._host = host
         self._name = name
         self._state = MediaPlayerState.OFF
@@ -100,7 +101,7 @@ class SeuraTV(MediaPlayerEntity):
             )
 
             if self._state == MediaPlayerState.ON:
-                self._volume = int(self._client.query_volume()) / 100
+                self._volume = self._client.query_volume() / 100
                 self._muted = self._volume == 0
                 self._source = self._client.query_input()
                 self._source_list = list(INPUT_MAP.keys())
