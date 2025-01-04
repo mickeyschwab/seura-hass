@@ -1,4 +1,4 @@
-"""Support for Seura TV media player."""
+"""Support for Seura TVs."""
 from __future__ import annotations
 
 import logging
@@ -9,40 +9,26 @@ from homeassistant.components.media_player import (
     MediaPlayerEntityFeature,
     MediaPlayerState,
 )
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
-from seura import SeuraClient, config
+from . import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-SUPPORT_SEURA = (
-    MediaPlayerEntityFeature.TURN_ON
-    | MediaPlayerEntityFeature.TURN_OFF
-    | MediaPlayerEntityFeature.VOLUME_STEP
-    | MediaPlayerEntityFeature.VOLUME_MUTE
-    | MediaPlayerEntityFeature.VOLUME_SET
-    | MediaPlayerEntityFeature.SELECT_SOURCE
-)
-
-def setup_platform(
+async def async_setup_entry(
     hass: HomeAssistant,
-    config: ConfigType,
-    add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the Seura TV platform."""
-    host = config.get(CONF_HOST)
-    name = config.get(CONF_NAME, "Seura TV")
+    """Set up Seura TV from a config entry."""
+    client = hass.data[DOMAIN][entry.entry_id]
+    name = entry.data[CONF_NAME]
+    host = entry.data[CONF_HOST]
 
-    if host is None:
-        _LOGGER.error("No host found in configuration")
-        return
-
-    add_entities([SeuraTV(host, name)], True)
-
+    async_add_entities([SeuraTV(client, name, host)], update_before_add=True)
 
 class SeuraTV(MediaPlayerEntity):
     """Representation of a Seura TV."""
