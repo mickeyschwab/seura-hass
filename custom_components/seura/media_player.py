@@ -14,7 +14,7 @@ from homeassistant.const import CONF_HOST, CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from seura import SeuraClient, config
+from seura import SeuraClient
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,10 +33,10 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Seura TV from a config entry."""
-    name = entry.data[CONF_NAME]
     host = entry.data[CONF_HOST]
+    name = entry.data[CONF_NAME]
 
-    async_add_entities([SeuraTV(name, host)], update_before_add=True)
+    async_add_entities([SeuraTV(host, name)], update_before_add=True)
 
 class SeuraTV(MediaPlayerEntity):
     """Representation of a Seura TV."""
@@ -99,7 +99,7 @@ class SeuraTV(MediaPlayerEntity):
                 self._volume = int(self._client.query_volume())
                 self._muted = self._volume == 0
                 self._source = self._client.query_input()
-                self._source_list = config.INPUT_LIST.keys()
+                self._source_list = list(self._client._client.INPUT_MAP.keys())
         except Exception as err:
             _LOGGER.error("Error updating Seura TV state: %s", err)
             self._state = MediaPlayerState.OFF
