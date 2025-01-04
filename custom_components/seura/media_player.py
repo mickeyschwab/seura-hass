@@ -1,4 +1,5 @@
 """Support for Seura TVs."""
+
 from __future__ import annotations
 
 import logging
@@ -19,7 +20,7 @@ from seura.config import INPUT_MAP
 
 _LOGGER = logging.getLogger(__name__)
 
-SUPPORT_SEURA = (
+SUPPORTED_FEATURES = (
     MediaPlayerEntityFeature.TURN_ON
     | MediaPlayerEntityFeature.TURN_OFF
     | MediaPlayerEntityFeature.VOLUME_STEP
@@ -27,6 +28,7 @@ SUPPORT_SEURA = (
     | MediaPlayerEntityFeature.VOLUME_SET
     | MediaPlayerEntityFeature.SELECT_SOURCE
 )
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -38,6 +40,7 @@ async def async_setup_entry(
     name = entry.data[CONF_NAME]
 
     async_add_entities([SeuraTV(host, name)], update_before_add=True)
+
 
 class SeuraTV(MediaPlayerEntity):
     """Representation of a Seura TV."""
@@ -86,7 +89,7 @@ class SeuraTV(MediaPlayerEntity):
     @property
     def supported_features(self) -> MediaPlayerEntityFeature:
         """Flag media player features that are supported."""
-        return SUPPORT_SEURA
+        return SUPPORTED_FEATURES
 
     def update(self) -> None:
         """Fetch state from the device."""
@@ -116,19 +119,25 @@ class SeuraTV(MediaPlayerEntity):
     def volume_up(self) -> None:
         """Volume up the media player."""
         self._client.volume_up()
+        self._volume += 0.01
 
     def volume_down(self) -> None:
         """Volume down the media player."""
         self._client.volume_down()
+        self._volume -= 0.01
 
     def set_volume_level(self, volume: float) -> None:
         """Set volume level, range 0..1."""
-        self._client.set_volume(volume * 100)
+        _LOGGER.info("Setting volume level to %s", int(volume * 100))
+        self._client.set_volume(int(volume * 100))
+        self._volume = volume
 
     def mute_volume(self, mute: bool) -> None:
         """Mute (true) or unmute (false) media player."""
         self._client.send_command("MUTE")
+        self._muted = mute
 
     def select_source(self, source: str) -> None:
         """Select input source."""
-        self._client.set_input(source) 
+        self._client.set_input(source)
+        self._source = source
