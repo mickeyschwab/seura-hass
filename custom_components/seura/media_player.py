@@ -15,6 +15,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from seura import SeuraClient
+from seura.config import INPUT_MAP
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -99,7 +100,7 @@ class SeuraTV(MediaPlayerEntity):
                 self._volume = int(self._client.query_volume())
                 self._muted = self._volume == 0
                 self._source = self._client.query_input()
-                self._source_list = self._client.get_inputs()
+                self._source_list = list(INPUT_MAP.keys())
         except Exception as err:
             _LOGGER.error("Error updating Seura TV state: %s", err)
             self._state = MediaPlayerState.OFF
