@@ -1,3 +1,6 @@
+# Archived
+My Séura TV died and I replaced it with a different brand so this repo is archived as I have no way to test it any longer
+
 # Séura Outdoor TV Integration for Home Assistant
 
 This integration allows you to control the Shade 1 series outdoor TVs through Home Assistant.
